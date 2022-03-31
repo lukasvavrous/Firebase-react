@@ -1,20 +1,29 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.App {  
+  background-image: linear-gradient(
+    45deg,
+    hsl(240deg 98% 62%) 0%,
+    hsl(234deg 94% 59%) 9%,
+    hsl(229deg 90% 55%) 18%,
+    hsl(224deg 86% 52%) 27%,
+    hsl(221deg 83% 51%) 36%,
+    hsl(220deg 82% 55%) 45%,
+    hsl(220deg 78% 59%) 55%,
+    hsl(219deg 72% 62%) 64%,
+    hsl(222deg 79% 64%) 73%,
+    hsl(228deg 89% 66%) 82%,
+    hsl(240deg 95% 69%) 91%,
+    hsl(256deg 97% 65%) 100%
+  );
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -24,9 +33,98 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.overlay{
+
+  display: flex;
+  place-content: center;
+  align-items: center;
+  justify-items: center;
+  width: 100vw;
+  height: 100vh;
+
 }
+
+.chatRoom{
+  backdrop-filter: blur(10px);
+
+  background-color: rgba(255, 255, 255, 0.164);
+  min-height: 90vh;
+  width: 45vw;
+  display: flex;
+  flex-direction: column;
+  
+  justify-content: space-between;    
+
+  border-bottom: 10px;
+
+}
+
+.messagesBox{
+  height: 80vh;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;  
+
+  justify-content: flex-start;  
+
+  
+
+}
+
+.InputMessageBox{
+  border-top: 1px solid white;  
+
+
+  display: flex;
+  width: 100%;  
+  height: 10vh;
+
+
+  align-items: center;
+  justify-content: space-evenly;  
+}
+
+
+.InputMessageBox input{
+  cursor: pointer;
+  border-radius: 10px;
+  width: 75%;
+  height: 40px;  
+  border: 1px solid black;
+  padding: 10px;
+  font-size: large;
+}
+
+.InputMessageBox button {    
+  height: 4vh;
+  width: 8vw;
+  border-radius: 5px;
+  font-size: large;
+  cursor: pointer;
+  border: 1px solid black;
+
+  transition: all .2s ease-in-out; 
+}
+
+.InputMessageBox button:hover {  
+  background-color: white;
+  border: 1px solid white;
+}
+
+.message{
+  font-size: large;
+  padding: 10px;
+  margin: 10px;
+  background-color: rgba(47, 33, 236, 0.705);
+  border-radius: 15px;
+}
+
+.sentMessage{  
+  align-self: flex-end;
+}
+
 
 @keyframes App-logo-spin {
   from {
@@ -36,3 +134,4 @@
     transform: rotate(360deg);
   }
 }
+ 
