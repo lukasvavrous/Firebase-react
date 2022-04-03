@@ -70,6 +70,7 @@
   justify-content: flex-start;  
 
   
+  overflow-y: scroll;
 
 }
 
@@ -91,10 +92,11 @@
   cursor: pointer;
   border-radius: 10px;
   width: 75%;
-  height: 40px;  
+  height: 4vh;
   border: 1px solid black;
   padding: 10px;
   font-size: large;
+  
 }
 
 .InputMessageBox button {    
@@ -133,5 +135,25 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background:  rgba(75, 72, 238, 0.281) 100%;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
  

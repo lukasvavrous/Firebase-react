@@ -1,15 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
-
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { useState } from 'react';
-import { getSpaceUntilMaxLength } from '@testing-library/user-event/dist/utils';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 firebase.initializeApp({
   apiKey: "AIzaSyColMqA6mZ4MM_Z-84oUDkjxtrPjUGEZkc",
@@ -26,39 +22,48 @@ const db = firebase.firestore();
 const messagesRef = db.collection('chatapp');
 
 function App() { 
+  const [ip, setIP] = useState('');
   const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
 
-  // const [messages, success, error, snaphot] = useCollectionData(messagesRef);
+  const getIp = async () => {
+    const res = await axios.get('https://geolocation-db.com/json/')    
+    setIP(res.data.IPv4)
+  }
 
-  useState(() =>{
-    console.log("Component moun" + message);
-  }, []);
+  useEffect(() => {    
+    getIp();
+    db
+      .collection("chatapp")
+      .orderBy('createdAt')
+      .onSnapshot((snapshot) => {
+        let _messages = [];        
+
+        snapshot.docs.forEach(e => _messages.push( {id: e.id, ...e.data()} ));
+
+        setMessages(_messages);
+      })
+  }, [])
   
-  const sendMessage = async (msg) => {
-  
-    console.log("SEND");
-
-
-    const res = await messagesRef.get();
-
-    console.log(res);
-
+  const sendMessage = async (msg) => {  
     await messagesRef.add({
-      sender:'user69',
+      sender:'me',
       name:'zmrdecek',    
+      ip: ip,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       content:msg,      
     });  
   
-    console.log('send:' + msg);
+    console.log('sended:' + msg);
   }
   
   function ChatRoom(){  
   
+    console.log(messages);
     return(
       <div className='overlay'>
         <div className='chatRoom'>
-            <Messages/>      
+            <Messages messages={messages}/>      
             <InputMessage/>
         </div>
       </div>
@@ -84,44 +89,21 @@ function App() {
       
     return(
       <div className="InputMessageBox">
-        <input id='inTextInput' value={message} onChange={ChangeHandler} onKeyDown={KeyDownHandler} placeholder='Message'/>
+        <input id='inTextInput' value={message} autoFocus onChange={ChangeHandler} onKeyDown={KeyDownHandler} placeholder='Message'/>
         <button text='Odeslat' onClick={() => KeyDownHandler(null)} >Odeslat</button>
       </div>
     );
   }
   
-  function Messages(){     
-    let messages = [];
-
-    messages.push({
-      id:'user69',
-      name:'zmrdecek',    
-      createdAt: new Date().getTime(),      
-      message: "Čus debílku"
-    });
-
-    messages.push({
-      id:'pepa',
-      name:'zmrdecek',    
-      createdAt: new Date().getTime(),      
-      message: "Čus debílku"
-    });
-
-    messages.push({
-      id:'user6f9',
-      name:'zmrdecek',    
-      createdAt: new Date().getTime(),      
-      message: "Čus debílku"
-    });
-
+  function Messages(props){     
     return (
       <div className='messagesBox'>
-        {messages && messages.map(msg => <ChatMessage key={msg.id} text={msg.message} isMyMessage={msg.id == 'user69'}/>)}
+        {props.messages && props.messages.map(msg => <ChatMessage key={msg.id} text={msg.content} isMyMessage={msg.ip == ip}/>)}
       </div>
     )
   }
   
-  function ChatMessage(props){    
+  function ChatMessage(props){        
     let classes = props.isMyMessage ? 'receievedMessage' : 'sentMessage';
     return <p className={'message ' + classes}>{props.text}</p>;
   }
