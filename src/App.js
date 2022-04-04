@@ -1,5 +1,7 @@
 import './App.css';
 
+import MessageBox from './components/MessageBox';
+
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -19,7 +21,7 @@ firebase.initializeApp({
 })
 
 const db = firebase.firestore();
-const messagesRef = db.collection('chatapp');
+const chatappRef = db.collection('chatapp');
 
 function App() { 
   const [ip, setIP] = useState('');
@@ -33,8 +35,7 @@ function App() {
 
   useEffect(() => {    
     getIp();
-    db
-      .collection("chatapp")
+      chatappRef
       .orderBy('createdAt')
       .onSnapshot((snapshot) => {
         let _messages = [];        
@@ -46,7 +47,7 @@ function App() {
   }, [])
   
   const sendMessage = async (msg) => {  
-    await messagesRef.add({
+    await chatappRef.add({
       sender:'me',
       name:'zmrdecek',    
       ip: ip,
@@ -63,7 +64,8 @@ function App() {
     return(
       <div className='overlay'>
         <div className='chatRoom'>
-            <Messages messages={messages}/>      
+            <MessageBox messages={messages} ip={ip}/>      
+
             <InputMessage/>
         </div>
       </div>
@@ -81,6 +83,8 @@ function App() {
         sendMessage(message);    
         setMessage('');
       }
+      
+      event.prevetDefault();
     }
 
     const ChangeHandler = e => {      
@@ -93,19 +97,6 @@ function App() {
         <button text='Odeslat' onClick={() => KeyDownHandler(null)} >Odeslat</button>
       </div>
     );
-  }
-  
-  function Messages(props){     
-    return (
-      <div className='messagesBox'>
-        {props.messages && props.messages.map(msg => <ChatMessage key={msg.id} text={msg.content} isMyMessage={msg.ip == ip}/>)}
-      </div>
-    )
-  }
-  
-  function ChatMessage(props){        
-    let classes = props.isMyMessage ? 'receievedMessage' : 'sentMessage';
-    return <p className={'message ' + classes}>{props.text}</p>;
   }
 
   return (
