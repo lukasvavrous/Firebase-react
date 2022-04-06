@@ -1,31 +1,17 @@
-import './App.css';
+import { useEffect, useState } from 'react';
+
+import firebase, { firestore } from './Firebase'
 
 import MessageBox from './components/MessageBox';
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-
-import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-firebase.initializeApp({
-  apiKey: "AIzaSyColMqA6mZ4MM_Z-84oUDkjxtrPjUGEZkc",
-  authDomain: "dockfire-b8043.firebaseapp.com",
-  databaseURL: "https://dockfire-b8043-default-rtdb.firebaseio.com",
-  projectId: "dockfire-b8043",
-  storageBucket: "dockfire-b8043.appspot.com",
-  messagingSenderId: "483773964660",
-  appId: "1:483773964660:web:0cdc3648a40cfd4b21cc21",
-  measurementId: "G-1V3H6KVPMN"
-})
+import './App.css';
 
-const db = firebase.firestore();
-const chatappRef = db.collection('chatapp');
+const chatappRef = firestore.collection('chatapp');
 
 function App() { 
-  const [ip, setIP] = useState('');
-  const [message, setMessage] = useState('');
+  const [ip, setIP] = useState('');  
   const [messages, setMessages] = useState([]);
 
   const getIp = async () => {
@@ -48,24 +34,18 @@ function App() {
   
   const sendMessage = async (msg) => {  
     await chatappRef.add({
-      sender:'me',
-      name:'zmrdecek',    
+      sender:'me',      
       ip: ip,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      createdAt: firebase.firebase.firestore.FieldValue.serverTimestamp(),      
       content:msg,      
-    });  
-  
-    console.log('sended:' + msg);
+    });        
   }
   
-  function ChatRoom(){  
-  
-    console.log(messages);
+  function ChatRoom(){        
     return(
       <div className='overlay'>
         <div className='chatRoom'>
             <MessageBox messages={messages} ip={ip}/>      
-
             <InputMessage/>
         </div>
       </div>
@@ -82,9 +62,7 @@ function App() {
       if (event == null || event.key === 'Enter') {              
         sendMessage(message);    
         setMessage('');
-      }
-      
-      event.prevetDefault();
+      }            
     }
 
     const ChangeHandler = e => {      
