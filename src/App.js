@@ -2,15 +2,25 @@ import { useEffect, useState } from 'react';
 
 import firebase, { firestore } from './Firebase'
 
-import MessageBox from './components/MessageBox';
+import { useFirestoreQueryData } from "@react-query-firebase/firestore"
+
+import { useQuery } from "react-query";
+
+import MessageBox from './containers/MessageBox';
 
 import axios from 'axios';
 
 import './App.css';
 
+//default
 const chatappRef = firestore.collection('chatapp');
 
 function App() { 
+
+  // const ref = _firebase.query(firestore.collection(firestore, "chatapp"));
+
+  // const query = useFirestoreQueryData(["products"], ref);  
+
   const [ip, setIP] = useState('');  
   const [messages, setMessages] = useState([]);
 
@@ -21,10 +31,10 @@ function App() {
 
   useEffect(() => {    
     getIp();
-      chatappRef
+    chatappRef
       .orderBy('createdAt')
       .onSnapshot((snapshot) => {
-        let _messages = [];        
+        let _messages = [];
 
         snapshot.docs.forEach(e => _messages.push( {id: e.id, ...e.data()} ));
 

@@ -25,10 +25,7 @@ const localConfig = {
     measurementId: "G-1V3H6KVPMN"
 }
 
-
 const instance = !firebase.apps.length ? firebase.initializeApp(config) : firebase.app();
-
-debugger;
 
 export default instance;
 
