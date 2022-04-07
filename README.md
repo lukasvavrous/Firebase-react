@@ -1,4 +1,4 @@
-# Project example implementing firestore for real time chat app  
+# Project with firestore for real time chat app  
 
 For try out just: 
 
