@@ -3,19 +3,19 @@ import ChatMessage from './ChatMessage'
 
 
 const Container = styled.div`
-  height: 80vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: flex-start;  
-  justify-content: flex-start;    
-  overflow-y: scroll;  
+    height: 80vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-start;  
+    justify-content: flex-start;    
+    overflow-y: scroll;  
 `
 
 const KeepDown = styled.div`    
     flex-direction:column;  
-  display: flex;
-  width: 100%;
+    display: flex;
+    width: 100%;
 `
 
 const StyledMessage = styled.p`
@@ -29,12 +29,18 @@ const StyledMessage = styled.p`
 //TODO ! ! !! 
 //<StyledMessage isMyMessage={props.isMyMessage} >{props.text}</StyledMessage> 
 
+
+const Messages = (props) => {
+    return(
+        props.messages && props.messages.map(msg => <ChatMessage key={msg.id} text={msg.content} isMyMessage={msg.ip == props.ip}/>)
+    )
+}
+
 function MessageBox(props){    
     return(
     <Container>
         <KeepDown>
-
-            {props.messages && props.messages.map(msg => <ChatMessage key={msg.id} text={msg.content} isMyMessage={msg.ip == props.ip}/>)}
+           <Messages messages={props.messages}/>
         </KeepDown>    
     </Container>
     )

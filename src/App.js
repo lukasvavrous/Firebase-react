@@ -1,27 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext } from 'react';
 
-import firebase, { firestore } from './Firebase'
-
-import { useFirestoreQueryData } from "@react-query-firebase/firestore"
-
-import { useQuery } from "react-query";
-
+import firebase, { firestore } from './firebase/FirebaseApp'
 import MessageBox from './containers/MessageBox';
-
 import axios from 'axios';
 
 import './App.css';
 
-//default
+import ChatInput from './containers/ChatInput';
+import useMessages from './firebase/hooks/useMessages';
+
 const chatappRef = firestore.collection('chatapp');
 
 function App() { 
-
-  // const ref = _firebase.query(firestore.collection(firestore, "chatapp"));
-
-  // const query = useFirestoreQueryData(["products"], ref);  
-
-  const [ip, setIP] = useState('');  
+  const [ip, setIP] = useState('');    
   const [messages, setMessages] = useState([]);
 
   const getIp = async () => {
@@ -51,48 +42,22 @@ function App() {
     });        
   }
   
-  function ChatRoom(){        
+  function ChatRoom(){         
     return(
       <div className='overlay'>
         <div className='chatRoom'>
-            <MessageBox messages={messages} ip={ip}/>      
-            <InputMessage/>
+            <MessageBox messages={messages} ip={ip}/>                  
+            <ChatInput sendMessage={sendMessage}/>
         </div>
       </div>
     )
   }
-  
-  function InputMessage(){
-    const [message, setMessage] = useState('');
-  
-  
-    const KeyDownHandler = (event) => {    
-      if(message.trim() == '') return;
-
-      if (event == null || event.key === 'Enter') {              
-        sendMessage(message);    
-        setMessage('');
-      }            
-    }
-
-    const ChangeHandler = e => {      
-      setMessage(e.target.value);
-    }
-      
-    return(
-      <div className="InputMessageBox">
-        <input id='inTextInput' value={message} autoFocus onChange={ChangeHandler} onKeyDown={KeyDownHandler} placeholder='Message'/>
-        <button text='Odeslat' onClick={() => KeyDownHandler(null)} >Odeslat</button>
-      </div>
-    );
-  }
 
   return (
     <div className="App">            
-      <ChatRoom/>      
+      <ChatRoom messages={messages} ip={ip} sendMessage={sendMessage}/>      
     </div>
   );
 }
 
 export default App;
-

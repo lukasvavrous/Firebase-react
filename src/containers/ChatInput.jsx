@@ -1,34 +1,34 @@
-import React from 'react'
+import React, { useRef } from 'react';
+
 import styled from "styled-components";
-import { useState } from 'react';
-import { connect } from 'react-redux'
-import { addMessage } from '../actions'
 
-function ChatInput({dispatch}){        
-  this.input = React.createRef();
+
+function ChatInput(props){        
+  const inputRef = useRef(null);
   
-  const Submit = () => {
-            
-      dispatch(addMessage(input.value))
-      input.value = ''
-    }
 
-    const KeyDownHandler = (event) => {    
-      if(message.trim() == '') return;
+  const KeyDownHandler = (event) => {    
+    let message = inputRef.current?.value;
 
-      if (event == null || event.key === 'Enter') {              
-        sendMessage(message);    
-        
-      }            
-    }
+    if(message.trim() == '') return;
+
+    if (event == null || event.key === 'Enter') {              
+      props.sendMessage(message);    
+      console.log("send message");
       
-    return(
-      <InputMessageBox>
-      //https://www.pluralsight.com/guides/how-to-use-react-to-set-the-value-of-an-input
-        <StyledInput ref={this.input} id='inTextInput' autoFocus onChange={ChangeHandler} onKeyDown={KeyDownHandler} placeholder='Message...'/>
-        <StyledButton text='Odeslat' onClick={() => KeyDownHandler(null)}>Odeslat</StyledButton>
-      </InputMessageBox>
-    );
+    }            
+  }
+
+  const Submit = () => {
+    KeyDownHandler();
+  }
+    
+  return(
+    <InputMessageBox>      
+      <StyledInput ref={inputRef} id='inTextInput' autoFocus onKeyDown={KeyDownHandler} placeholder='Message...'/>
+      <StyledButton text='Odeslat' onClick={Submit}>Odeslat</StyledButton>
+    </InputMessageBox>
+  );
 }
 
 const InputMessageBox = styled.div`
@@ -37,12 +37,7 @@ const InputMessageBox = styled.div`
     width: 100%;  
     height: 10vh;
     align-items: center;
-    justify-content: space-evenly;  
-    &:hover,
-    &:focus {
-        background-color: white;
-        border: 1px solid white;
-    }
+    justify-content: space-evenly;        
 `
 
 const StyledInput = styled.input`
@@ -53,6 +48,13 @@ const StyledInput = styled.input`
     border: 1px solid black;
     padding: 10px;
     font-size: large;
+    transition: all .1s ease-in-out; 
+
+    &:hover,
+    &:focus {
+        background-color: white;
+        border: 1px solid white;
+    }
 `
 
 const StyledButton = styled.button`
@@ -63,7 +65,11 @@ const StyledButton = styled.button`
     cursor: pointer;
     border: 1px solid black;
 
-    transition: all .2s ease-in-out; 
+    transition: all .1s ease-in-out; 
+    &:hover{
+        background-color: white;
+        border: 1px solid white;
+    }
 `
 
 
